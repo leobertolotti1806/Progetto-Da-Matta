@@ -1,0 +1,29 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "dev:lan": "nuxt dev --host 0.0.0.0",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "axios": "^1.10.0",
+    "js-cookie": "^3.0.5",
+    "mitt": "^3.0.1",
+    "nuxt": "^3.16.1",
+    "qrcode": "^1.5.4",
+    "swiper": "^11.2.8",
+    "vee-validate": "^4.15.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0",
+    "vuetify-nuxt-module": "^0.18.4",
+    "yup": "^1.6.1"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6"
+  }
+}

@@ -1,0 +1,145 @@
+@font-face {
+  font-family: "myFont";
+  src: url("https://bertolotti.ct.ws/myFont.otf");
+}
+
+* {
+  font-family: "myFont";
+}
+
+button:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body.cursorWait {
+  cursor: wait !important;
+}
+
+.cursorWait * {
+  cursor: wait !important;
+}
+
+.cursorWait button:disabled,
+.cursorWait button {
+  opacity: 0.5 !important;
+}
+
+body {
+  margin: 0;
+}
+
+h1 {
+  font-size: 70px;
+  margin: 0;
+}
+
+h2 {
+  color: rgba(84, 84, 84, 1);
+  font-size: 32px;
+  margin: 0;
+}
+
+p {
+  color: rgba(95, 98, 99, 1);
+  font-size: 20px;
+}
+
+.btn {
+  padding: 8px 20px;
+  text-decoration: none;
+  background: #800000;
+  color: white;
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+.btn-satispay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ff3d00;
+  padding: 1vh 0;
+  column-gap: 8px;
+  text-align: center;
+  border: none;
+  width: 100%;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s;
+  text-decoration: none;
+}
+
+.btn-satispay:hover , .btn:hover{
+  transform: scale(1.03);
+}
+
+hr {
+  width: 100%;
+  background-color: #998630;
+  height: 3px;
+  margin: 12px;
+  border-color: transparent;
+  border-radius: 32px;
+}
+
+#backHome {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #a1864f;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background, transform 0.3s;
+}
+
+#backHome:hover {
+  transform: scale(1.02);
+  background-color: #8c7540;
+}
+
+#backHome {
+  position: fixed;
+  z-index: 20;
+  bottom: 17px;
+  left: 17px;
+}
+
+@media screen and (max-width:768px) {
+  h1 {
+    font-size: 52.5px;
+  }
+
+  p {
+    font-size: 17px;
+  }
+}
+
+@media screen and (max-width:480px) {
+  h1 {
+    font-size: 40px;
+  }
+
+  p {
+    font-size: 15px;
+    margin: 8px 0;
+  }
+
+  .btn {
+    font-size: 15px;
+    padding: 5px 15px;
+  }
+
+  .btn-satispay {
+    font-size: 15px;
+  }
+}
