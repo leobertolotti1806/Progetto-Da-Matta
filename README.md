@@ -11,9 +11,9 @@ Lato database è stato utilizzato un database relazionale sql.
 Riguardo alla parte dei pagamenti, non si è potuto utilizzare come conferma di pagamento il callback nativo di satispay perchè
 richiedeva un callback_url con un certificato ssl valido che su InfinityFree non era disponibile.
 Quindi ad ogni operazione che riguarda e necessita di:
-    1) avere un numero aggiornato di iscritti guardando se il pagamento è andato a buon fine o no
-    2) visualizzazione lato admin degli iscritti / pagamenti del giorno
-    3) nella pagina event (e iscrizione) per quanto riguarda la logica di posti disponibili
+    \n1) avere un numero aggiornato di iscritti guardando se il pagamento è andato a buon fine o no
+    \n2) visualizzazione lato admin degli iscritti / pagamenti del giorno
+    \n3) nella pagina event (e iscrizione) per quanto riguarda la logica di posti disponibili
 è stata aggiunta una funzione validaPagamentiRegistrati($idEvento) che inserisce negli iscritti i pagamenti confermati
 e elimina dalla tabella PendingPagamenti quelli non confermati / scaduti.
 
