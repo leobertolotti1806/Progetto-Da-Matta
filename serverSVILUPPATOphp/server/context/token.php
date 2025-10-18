@@ -48,11 +48,13 @@ function setToken($name, $data, $expire = false)
     setcookie(
         $name,
         json_encode(encryptToken($data)),
-        $time + ((is_bool($expire) && !$expire) ? 1209600 : $expire),
-        "/",
-        "",
-        isset($_SERVER["HTTPS"]),
-        true
+        [
+            "expires" => $time + ((is_bool($expire) && !$expire) ? 1209600 : $expire),
+            "path" => "/",
+            "httponly" => true,
+            "secure" => isset($_SERVER['HTTPS']),
+            "samesite" => 'Lax'
+        ]
     );
 }
 
@@ -68,12 +70,15 @@ function deleteToken($name)
         setcookie(
             $name,
             '',
-            time() - 3600, // 1 ora fa
-            '/',
-            '',
-            isset($_SERVER['HTTPS']),
-            true
+            [
+                "expires" => time() - 3600, //1 ora fa,
+                "path" => "/",
+                "httponly" => true,
+                "secure" => isset($_SERVER['HTTPS']),
+                "samesite" => 'Lax'
+            ]
         );
+
 
         // Rimuove anche dalla superglobale per evitare accessi successivi nello stesso script
         unset($_COOKIE[$name]);
