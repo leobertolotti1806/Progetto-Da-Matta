@@ -39,6 +39,26 @@ class Vino extends ConnessioneDb
             $data["Denominazione"] = null;
         }
 
+        if (!isset($data["Vitigno"]) || $data["Vitigno"] == "" || $data["Vitigno"] == "null") {
+            $data["Vitigno"] = null;
+        }
+
+        if (isset($data["Evidenzia"])) {
+            if ($data["Evidenzia"] == "true" || $data["Evidenzia"] == 1 || $data["Evidenzia"] == "1") {
+                $data["Evidenzia"] = true;
+            } else {
+                $data["Evidenzia"] = false;
+            }
+        }
+
+        if (isset($data["Bio"])) {
+            if ($data["Bio"] == "true" || $data["Bio"] == 1 || $data["Bio"] == "1") {
+                $data["Bio"] = true;
+            } else {
+                $data["Bio"] = false;
+            }
+        }
+
         foreach ($data as $key => $value) {
             $addClause[] = ":$key";
             $fieldCluases[] = "$key";
@@ -107,6 +127,26 @@ class Vino extends ConnessioneDb
 
         if (!isset($data["Gradazione"]) || $data["Gradazione"] == "" || $data["Gradazione"] == "null") {
             $data["Gradazione"] = null;
+        }
+
+        if (!isset($data["Vitigno"]) || $data["Vitigno"] == "" || $data["Vitigno"] == "null") {
+            $data["Vitigno"] = null;
+        }
+
+        if (isset($data["Bio"])) {
+            if ($data["Bio"] == "true" || $data["Bio"] == 1 || $data["Bio"] == "1") {
+                $data["Bio"] = true;
+            } else {
+                $data["Bio"] = false;
+            }
+        }
+
+        if (isset($data["Evidenzia"])) {
+            if ($data["Evidenzia"] == "true" || $data["Evidenzia"] == 1 || $data["Evidenzia"] == "1") {
+                $data["Evidenzia"] = true;
+            } else {
+                $data["Evidenzia"] = false;
+            }
         }
 
         $setClause = [];
@@ -214,7 +254,7 @@ class Vino extends ConnessioneDb
         $limit = intval($data["limit"]);
         $offset = intval($data["offset"]);
 
-        $sql = "SELECT Id, Nome, Anno, 
+        $sql = "SELECT Id, Nome, Vitigno, Bio, Anno, 
         CASE WHEN Offerta IS NOT NULL THEN CONCAT(Costo, '-', Offerta)
         ELSE Costo END AS Costo, Evidenzia, Colore,
          Marca, Regione, 
@@ -223,6 +263,7 @@ class Vino extends ConnessioneDb
 
         if ($data["search"] != "") {
             $sql .= " WHERE Nome LIKE :search OR 
+                Vitigno LIKE :search OR
                 Anno LIKE :search OR 
                 Costo LIKE :search OR 
                 Colore LIKE :search OR 
@@ -255,7 +296,7 @@ class Vino extends ConnessioneDb
     public static function getViniEvidenziati()
     {
         try {
-            $stmt = self::getConn()->prepare("SELECT Id, Nome, Colore, Anno, Costo, Offerta, Quantita, Marca 
+            $stmt = self::getConn()->prepare("SELECT Id, Nome, Vitigno, Bio, Colore, Anno, Costo, Offerta, Quantita, Marca 
             FROM Vini WHERE Evidenzia = 1");
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -273,10 +314,12 @@ class Vino extends ConnessioneDb
                 "Quantita",
                 "Gradazione",
                 "Offerta",
+                "Bio",
                 "Effervescenza",
                 "Colore",
                 "Marca",
                 "Nome",
+                "Vitigno",
                 "Denominazione"
             ])
         ) {
@@ -287,7 +330,7 @@ class Vino extends ConnessioneDb
             $data["order"] = "ASC";
         }
 
-        $sql = "SELECT Id, Nome, Anno, Costo, Offerta, Quantita, Colore, Marca, Evidenzia
+        $sql = "SELECT Id, Nome, Vitigno, Bio, Anno, Costo, Offerta, Quantita, Colore, Marca, Evidenzia
              FROM Vini WHERE ";
 
         if (isset($data["getAll"])) {
@@ -317,7 +360,7 @@ class Vino extends ConnessioneDb
 
         if (!empty($data["search"])) {
             $sql .= "AND (
-            Nome LIKE :search OR Effervescenza LIKE :search 
+            Nome LIKE :search OR Vitigno LIKE :search OR Effervescenza LIKE :search 
             OR Marca LIKE :search OR Colore LIKE :search ";
 
             if (is_numeric($data["search"])) {
@@ -340,7 +383,6 @@ class Vino extends ConnessioneDb
         }
 
         try {
-            /* echo $sql; */
             $stmt = self::getConn()->prepare($sql);
 
             foreach ($params as $key => $value) {
