@@ -101,7 +101,7 @@ onMounted(() => {
 
             <a :href="paymentLink" target="_blank" class="btn-satispay">
                 Apri in Satispay
-                <img src="/satispay.jpg" alt="Satispay logo">
+                <img src="http://damatta.ct.ws/img/satispay.jpg" alt="Satispay logo">
             </a>
 
             <p class="info">Se non riesci ad aprire satispay dal bottone, scannerizza il codice Qr con l'app.</p>

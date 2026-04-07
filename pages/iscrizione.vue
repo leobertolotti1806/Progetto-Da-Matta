@@ -117,7 +117,7 @@ async function invia() {
                     <button v-if="evento?.Costo == 0" type="submit" class="btn">Iscriviti</button>
                     <button v-else class="btn btn-satispay" type="submit">
                         Satispay
-                        <img src="/satispay.jpg" alt="Satispay logo">
+                        <img src="http://damatta.ct.ws/satispay.jpg" alt="Satispay logo">
                     </button>
                 </div>
             </form>

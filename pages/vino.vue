@@ -26,7 +26,6 @@ if (!route.query.id) {
             errorObj.linkMsg = 'Torna alla lista vini';
             errorObj.link = '/vini';
         } else {
-
             vino.value = data.vino;
             useHead({ title: data.vino.Nome });
         }
@@ -45,8 +44,8 @@ if (!route.query.id) {
             </div>
 
             <div class="vino-main-info">
-                <h1>{{ vino.Nome }}</h1>
-                <h2>{{ vino.Marca }}</h2>
+                <h1 class="nome-vino">{{ vino.Nome }}</h1>
+                <h2 class="marca-vino">{{ vino.Marca }}</h2>
 
                 <!-- Informazioni sintetiche -->
                 <div class="vino-info-badge">
@@ -54,9 +53,11 @@ if (!route.query.id) {
                     <span>{{ vino.Quantita }} L</span>
                     <span>{{ vino.Colore }}</span>
                     <span v-if="vino.Denominazione">{{ vino.Denominazione }}</span>
+                    <span class="bioTag" v-if="vino.Bio">Bio&nbsp;<img src="https://img.icons8.com/?size=15&id=15807&format=png&color=eeeeee"></span>
                     <span v-if="vino.Regione">{{ vino.Regione }}</span>
                 </div>
 
+                <b class="vino-vitigno" v-if="vino.Vitigno">Vitigno: {{ vino.Vitigno }}</b>
                 <p class="vino-descrizione" v-html="vino.Descrizione.replaceAll('\n', '<br>')"></p>
 
                 <!-- PREZZO -->
@@ -80,7 +81,8 @@ if (!route.query.id) {
             <div class="scheda-tecnica">
                 <h3>📋 Scheda tecnica</h3>
                 <div class="scheda-grid">
-                    <div><b>Gradazione</b><span>{{ vino.Gradazione ? vino.Gradazione + '°' : 'Non specificato'}}</span></div>
+                    <div><b>Gradazione</b><span>{{ vino.Gradazione ? vino.Gradazione + '°' : 'Non specificato' }}</span>
+                    </div>
                     <div><b>Tipo</b><span>{{ vino.Effervescenza }}</span></div>
                 </div>
             </div>
@@ -97,7 +99,7 @@ main {
     justify-content: center;
     margin-top: 90px;
     padding: 4vh 6vw;
-    background: url("/img/lightBackground.png") repeat ;
+    background: url("/img/lightBackground.png") repeat;
 }
 
 .vino-container {
@@ -131,16 +133,16 @@ main {
 }
 
 .etichetta {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background-color: #d90000;
-  color: white;
-  padding: 5px 10px;
-  font-size: 12px;
-  border-radius: 6px;
-  text-transform: uppercase;
-  font-weight: bold;
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: #d90000;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 /* INFO */
@@ -155,20 +157,30 @@ main {
 
 .vino-main-info h1 {
     font-size: 36px;
-    color: #2c3e50;
+    /* color: #2c3e50; */
+    color: #18181B;
+
 }
 
 .vino-main-info h2 {
     font-size: 20px;
-    color: #777;
+    color: #666;
     font-weight: normal;
 }
 
-.vino-descrizione {
+.vino-descrizione,
+.vino-vitigno {
+    text-align: left;
     font-size: 17px;
     flex: 0.8;
     line-height: 1.7;
     color: #333;
+}
+
+.vino-vitigno {
+    /* color: #A1A1AA;
+    font-weight: normal; */
+    font-size: 20px;
 }
 
 /* PREZZO */
@@ -265,6 +277,11 @@ hr {
     margin: 5px 0 10px;
 }
 
+.vino-info-badge .bioTag {
+    background-color: #88b04b;
+    color: #eeeeee;
+}
+
 .vino-info-badge span {
     background: #f1f1f1;
     padding: 6px 12px;
@@ -285,16 +302,17 @@ hr {
 
 /* MOBILE */
 @media (max-width: 768px) {
-    .vino-info-badge{
+    .vino-info-badge {
         justify-content: center;
     }
+
     .vino-container {
         flex-direction: column;
         width: 100%;
     }
 
-    .vino-descrizione{
-        margin: 24px 0;
+    .vino-vitigno {
+        text-align: center;
     }
 
     hr {
@@ -324,7 +342,7 @@ hr {
         align-self: center;
     }
 
-    .vino-img img{
+    .vino-img img {
         height: 400px;
     }
 }

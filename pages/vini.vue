@@ -166,7 +166,7 @@ load();
 
           <div class="riga-ordina">
             <MyInput label="Ordina per" v-model="filtri.sortBy" type="select" :data="toSelectOptions([
-              'Marca', 'Nome', 'Anno', 'Costo', 'Effervescenza', 'Colore', 'Gradazione', 'Quantita'
+              'Marca', 'Nome', 'Vitigno', 'Anno', 'Costo', 'Effervescenza', 'Colore', 'Gradazione', 'Quantita'
             ])" />
             <MyInput label="Senso" v-model="filtri.order" type="select" :data="[
               { text: 'Crescente', value: 'ASC' },
@@ -186,6 +186,7 @@ load();
           <div class="info">
             <h3>{{ vino.Nome + ' ' + (vino?.Anno ? `(${vino.Anno})` : '') }}</h3>
             <p>{{ vino.Marca }}</p>
+            <span class="vitigno" v-if="vino.Vitigno">{{ vino.Vitigno }}</span>
             <strong v-if="vino.Offerta">
               <span class="prezzo-originale">{{ vino.Costo }} €</span>
               <span class="prezzo-offerta">{{ vino.Offerta }} €</span>
@@ -194,6 +195,7 @@ load();
           </div>
           <div class="quantita-bottiglia">{{ vino.Quantita }} L</div>
           <div class="colore-bottiglia" :class="vino.Colore">{{ vino.Colore }}</div>
+          <div class="bio-bottiglia" v-if="vino.Bio">Bio&nbsp;<img src="https://img.icons8.com/?size=15&id=15807&format=png&color=eeeeee"></div>
         </a>
       </div>
     </section>
@@ -210,6 +212,7 @@ load();
           <div class="info">
             <h3>{{ vino.Nome + ' ' + (vino?.Anno ? `(${vino.Anno})` : '') }}</h3>
             <p>{{ vino.Marca }}</p>
+            <span class="vitigno" v-if="vino.Vitigno">{{ vino.Vitigno }}</span>
             <strong v-if="vino.Offerta">
               <span class="prezzo-originale">{{ vino.Costo }} €</span>
               <span class="prezzo-offerta">{{ vino.Offerta }} €</span>
@@ -218,11 +221,12 @@ load();
           </div>
           <div class="quantita-bottiglia">{{ vino.Quantita }} L</div>
           <div class="colore-bottiglia" :class="vino.Colore">{{ vino.Colore }}</div>
+          <div class="bio-bottiglia" v-if="vino.Bio">Bio&nbsp;<img src="https://img.icons8.com/?size=15&id=15807&format=png&color=eeeeee"></div>
         </a>
       </div>
-      <h1 v-else style="color: rgba(84, 84, 84, 1);">Nessun risultato {{ filtri.search != "" ? `per ' ${filtri.search}
+      <h1 v-else style="color: rgba(84, 84, 84, 1);">Nessun risultato <!-- {{ filtri.search != "" ? `per ' ${filtri.search}
         '` :
-        filtri.Marca != "" ? `per ' ${filtri.Marca} '` : ""}}</h1>
+        filtri.Marca != "" ? `per ' ${filtri.Marca} '` : "" }} --></h1>
     </section>
   </main>
   <myFooter v-if="!error" />
@@ -254,6 +258,7 @@ load();
   background-color: #D8C3A5;
   color: #333;
 }
+
 
 main {
   display: flex;
@@ -373,7 +378,7 @@ hr {
 }
 
 .quantita-bottiglia,
-.colore-bottiglia {
+.colore-bottiglia, .bio-bottiglia {
   position: absolute;
   bottom: 10px;
   font-weight: bold;
@@ -384,6 +389,22 @@ hr {
   font-size: 13px;
   border-radius: 4px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.bio-bottiglia{
+  background-color: #88b04b;
+  color: #eeeeee;
+  top: 43px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: unset;
+  
+}
+.bio-bottiglia > img{
+  min-height: unset !important;
+  height: 15px !important;
+  width: 15px;
 }
 
 .colore-bottiglia {
@@ -420,7 +441,7 @@ hr {
   /* min-width: 335px; */
   color: initial;
   text-decoration: none;
-  height: 480px;
+  height: 490px;
   row-gap: 8px;
   padding: 16px 0;
   flex: 1 1 calc(33% - 5vw);
@@ -443,8 +464,14 @@ hr {
 }
 
 .card .info h3 {
-  margin: 5px 0;
-  font-size: 17px;
+  margin: 5px 10px;
+  font-size: 18px;
+  color: #18181B;
+}
+
+span.vitigno{
+  font-size: 15px;
+  color: #A1A1AA;
 }
 
 h2 {
@@ -453,6 +480,7 @@ h2 {
 
 .card .info p {
   color: #666;
+  font-size: 17px;
   margin: 4px 0;
 }
 
@@ -581,6 +609,13 @@ h2 {
     font-size: 12px;
   }
 
+  a.card{
+    height: 480px;
+  }
+  .info p{
+    font-size: 16px;
+  }
+
   h2 {
     font-size: 26px;
   }
@@ -618,6 +653,10 @@ h2 {
 
   .card {
     min-width: 100%;
+  }
+
+  .card .info h3 {
+    margin: 5px;
   }
 }
 </style>
