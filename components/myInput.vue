@@ -134,7 +134,7 @@ function handleDrop(e) {
 
 <template>
     <div class="input-group">
-        <label v-if="label">{{ label }}</label>
+        <label v-if="label">{{ label }}<span class="red" v-if="props.required"> *</span></label>
 
         <select v-if="type === 'select'" :required="required" :value="modelValue ?? defaultValue"
             @change="e => emit('update:modelValue', e.target.value)">
@@ -418,7 +418,9 @@ textarea:focus {
     position: absolute;
     display: none;
 }
-
+.red{
+    color: red;
+}
 .custom-checkbox input:checked~.checkmark::after {
     display: block;
 }

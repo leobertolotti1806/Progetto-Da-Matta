@@ -83,8 +83,8 @@ async function saveChanges() {
             <br>
             <p>Per confermare le tue scelte premi il bottone in fondo a questa pagina</p>
             <br>
-            <p>(Per modifica le immagini fare doppio click)</p>
-            <p>(Per modifica i paragrafi basta cliccare)</p>
+            <p>(Per modificare le immagini fare doppio click)</p>
+            <p>(Per modificare i paragrafi basta cliccare)</p>
         </div>
 
         <!-- ANTEPRIMA PAGINA -->

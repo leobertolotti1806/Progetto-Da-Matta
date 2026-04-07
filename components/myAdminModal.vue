@@ -254,6 +254,9 @@ function close() {
                     <MyInput label="Nome" placeholder="Nome" v-model="dato.Nome"
                         :default-value="editMode ? dato?.Nome : null" required />
 
+                    <MyInput label="Vitigno" placeholder="Vitigno" v-model="dato.Vitigno"
+                        :default-value="editMode ? dato?.Vitigno : null" />
+
                     <MyInput label="Marca" placeholder="Marca" v-model="dato.Marca"
                         :default-value="editMode ? dato?.Marca : null" required />
 
@@ -269,6 +272,9 @@ function close() {
 
                     <MyInput label="Regione" placeholder="Regione" v-model="dato.Regione"
                         :default-value="editMode ? dato?.Regione : null" />
+
+                    <MyInput label="Spuntare se è bio" type="checkbox" v-model="dato.Bio"
+                        placeholder="Bio" :default-value="editMode ? dato?.Bio : false" />
 
                     <MyInput label="Quantità in litri" placeholder="Quantità in litri" type="price"
                         v-model="dato.Quantita" :default-value="editMode ? dato?.Quantita : null" required />
@@ -314,8 +320,8 @@ function close() {
                     <MyInput label="Nome cantina" placeholder="Nome cantina" v-model="dato[33]" required
                         :default-value="dato[33]" />
 
-                    <MyInput type="tel" label="Numero di telefono" placeholder="Numero di telefono" v-model="dato[34]"
-                        required :default-value="dato[34]" />
+                    <MyInput type="tel" label="Numero di telefono" placeholder="Numero di telefono (tutto attaccato)"
+                        v-model="dato[34]" required :default-value="dato[34]" />
 
                     <MyInput type="mail" label="Email" placeholder="Email" v-model="dato[35]" required
                         :default-value="dato[35]" />

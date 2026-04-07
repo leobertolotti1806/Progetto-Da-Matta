@@ -64,7 +64,7 @@ onBeforeUnmount(() => {
   <header :class="{ 'header-hidden': headerHidden }" ref="headerRef">
     <div class="header-top">
       <a href="/home" class="logo">
-        <img src="/img/loghi/loghi1.webp" />
+        <img src="http://damatta.ct.ws/img/loghi/loghi1.webp" />
       </a>
 
       <!-- Menu Desktop -->
@@ -128,7 +128,6 @@ header {
   border-bottom: 1px solid #eee;
 }
 
-/* Contenitore superiore */
 .header-top {
   display: flex;
   justify-content: space-between;

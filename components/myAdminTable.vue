@@ -152,7 +152,7 @@ function renderizza(text, col) {
             t = text + "€";
         }
     } else if (titolo.value == "Vini" && (
-        col == "Evidenzia" || col == "Offerta"
+        col == "Evidenzia" || col == "Offerta" || col == "Bio"
     )) {
         t = text ? "Sì✅" : "No❌";
     } else if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
@@ -218,7 +218,7 @@ function renderizza(text, col) {
                     </tr>
                 </tbody>
             </table>
-            <h1 v-else>Nessun risultato per ' {{ search }} '</h1>
+            <h1 v-else>Nessun risultato<!--  per ' {{ search }} ' --></h1>
         </div>
 
         <div v-if="(page * perPage) <= elementi.length" class="loadMoreDiv">
