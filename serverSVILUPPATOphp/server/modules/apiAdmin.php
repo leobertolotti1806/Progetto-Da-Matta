@@ -52,7 +52,7 @@ switch ($path) {
         if (
             hasKeys($data, ["search", "sortBy", "sortDir", "limit", "offset"])
             &&
-            in_array($data["sortBy"], ["", "Nome", "Anno", "Costo", "Evidenzia", "Tipo", "Marca", "Denominazione", "Colore", "Effervescenza", "Regione", "Offerta"])
+            in_array($data["sortBy"], ["", "Nome", "Vitigno", "Anno", "Bio", "Costo", "Evidenzia", "Tipo", "Marca", "Denominazione", "Colore", "Effervescenza", "Regione", "Offerta"])
         ) {
             require_once "./server/controllers/vini.php";
 
