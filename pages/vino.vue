@@ -39,7 +39,7 @@ if (!route.query.id) {
         <section class="vino-container">
             <!-- IMMAGINE -->
             <div class="vino-img">
-                <div class="etichetta" v-if="vino.Evidenzia">In Evidenza</div>
+                <div class="etichetta" v-if="vino.Evidenzia == '1' || vino.Evidenzia == 1">In Evidenza</div>
                 <img :src="`/img/vini/${vino.Id}.webp?d=${Math.random()}`" :alt="vino.Nome" />
             </div>
 
@@ -49,11 +49,11 @@ if (!route.query.id) {
 
                 <!-- Informazioni sintetiche -->
                 <div class="vino-info-badge">
-                    <span>{{ vino.Anno }}</span>
+                    <span v-if="vino?.Anno && parseInt(vino.Anno)">{{ vino.Anno }}</span>
                     <span>{{ vino.Quantita }} L</span>
                     <span>{{ vino.Colore }}</span>
                     <span v-if="vino.Denominazione">{{ vino.Denominazione }}</span>
-                    <span class="bioTag" v-if="vino.Bio">Bio&nbsp;<img src="https://img.icons8.com/?size=15&id=15807&format=png&color=eeeeee"></span>
+                    <span class="bioTag" v-if="vino.Bio == '1' || vino.Bio == 1">Bio&nbsp;<img src="https://img.icons8.com/?size=15&id=15807&format=png&color=eeeeee"></span>
                     <span v-if="vino.Regione">{{ vino.Regione }}</span>
                 </div>
 
@@ -67,7 +67,7 @@ if (!route.query.id) {
                         <span class="prezzo-offerta">{{ vino.Offerta }} €</span>
                     </template>
                     <template v-else>
-                        <span class="prezzo-normale">{{ vino.Costo }} €</span>
+                        <span class="prezzo-normale">{{ parseFloat(vino.Costo) ? `${vino.Costo} €` : "Prezzo da definire" }}</span>
                     </template>
                 </div>
 

@@ -239,7 +239,7 @@ section .btn {
 }
 
 .divText span.paragraph {
-  gap: 20px;
+  gap: 20px
 }
 
 .divImg {
@@ -254,7 +254,7 @@ section .btn {
 .divImg img {
   max-width: 45%;
   min-width: 250px;
-  height: fit-content;
+  height: 100%;
   border-radius: 12px;
   box-shadow:
     rgba(0, 0, 0, 0.25) 0 7vh 7vh,
@@ -292,7 +292,7 @@ section .btn {
 
 #eventi>img {
   max-width: 18%;
-  height: fit-content;
+  height: auto;
   max-height: 80%;
 }
 

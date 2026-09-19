@@ -13,7 +13,7 @@ const error = ref(false);
 const route = useRoute();
 
 const page = ref(1);
-const limit = 15;
+const perPage = 30;
 
 const filtri = reactive({
   search: "",
@@ -22,8 +22,8 @@ const filtri = reactive({
   effervescenza: "",
   sortBy: "",
   order: "ASC",
-  limit: 15,
-  offset: (page.value - 1) * limit,
+  limit: 30,
+  offset: 0,
   firstTime: 1
 });
 
@@ -48,18 +48,26 @@ let oldFiltri = {
 
 let listaVini = null;
 
+function cercaVini() {
+  filtri.offset = 0;
+  page.value = 1;
+  load();
+}
 
 function load(loadMore = false) {
-  if (filtri.search != oldFiltri.search || filtri.Marca != oldFiltri.Marca ||
+
+  if (loadMore ||
+    filtri.search != oldFiltri.search || filtri.Marca != oldFiltri.Marca ||
     filtri.colore != oldFiltri.colore || filtri.effervescenza != oldFiltri.effervescenza ||
     filtri.sortBy != oldFiltri.sortBy || filtri.order != oldFiltri.order
   ) {
+
     oldFiltri.search = filtri.search;
     oldFiltri.Marca = filtri.Marca;
     oldFiltri.colore = filtri.colore;
     oldFiltri.effervescenza = filtri.effervescenza;
     oldFiltri.sortBy = filtri.sortBy;
-    oldFiltri.order = filtri.order;
+    oldFiltri.order = filtri.order
 
     getData("/getVini", filtri).then(function (data) {
       if (filtri.getAll) {
@@ -75,8 +83,10 @@ function load(loadMore = false) {
           vini.value = data.vini;
           scrollToVini();
         } else {
-          vini.value.push(...data.vini);
-          page.value++;
+          for (let i = 0; i < data.vini.length; i++) {
+            vini.value.push(data.vini[i]);
+          }
+          console.log("vini.value => ", vini.value);
         }
       } else {
         filtri.firstTime = 0;
@@ -130,6 +140,12 @@ function leaveAnim(el) {
   })
 }
 
+function avantiPagina() {
+  page.value++;
+  filtri.offset = (page.value - 1) * perPage;
+  setTimeout(load, 40, true);
+}
+
 load();
 </script>
 
@@ -141,8 +157,8 @@ load();
       <div class="search-bar">
         <div>
           <MyInput type="text" v-model="filtri.search" placeholder="Cerca un vino..." id="cercaInput"
-            @invioPremuto="load()" />
-          <button id="cerca" @click="load()">Cerca</button>
+            @invioPremuto="cercaVini()" />
+          <button id="cerca" @click="cercaVini()">Cerca</button>
         </div>
         <button class="filtri-toggle" @click="toggleFiltri">
           {{ mostraFiltri ? '▲' : '▼' }}
@@ -166,7 +182,7 @@ load();
 
           <div class="riga-ordina">
             <MyInput label="Ordina per" v-model="filtri.sortBy" type="select" :data="toSelectOptions([
-              'Marca', 'Nome', 'Vitigno', 'Anno', 'Costo', 'Effervescenza', 'Colore', 'Gradazione', 'Quantita'
+              'Marca', 'Nome', 'Vitigno', 'Anno', 'Costo', 'Effervescenza', 'Colore', 'Gradazione', 'Quantita', 'Bio'
             ])" />
             <MyInput label="Senso" v-model="filtri.order" type="select" :data="[
               { text: 'Crescente', value: 'ASC' },
@@ -195,7 +211,8 @@ load();
           </div>
           <div class="quantita-bottiglia">{{ vino.Quantita }} L</div>
           <div class="colore-bottiglia" :class="vino.Colore">{{ vino.Colore }}</div>
-          <div class="bio-bottiglia" v-if="vino.Bio">Bio&nbsp;<img src="https://img.icons8.com/?size=15&id=15807&format=png&color=eeeeee"></div>
+          <div class="bio-bottiglia" v-if="vino.Bio == '1' || vino.Bio == 1">Bio&nbsp;<img
+              src="https://img.icons8.com/?size=15&id=15807&format=png&color=eeeeee"></div>
         </a>
       </div>
     </section>
@@ -205,35 +222,67 @@ load();
     <section class="vini-lista" id="wines">
       <h2>Risultati</h2>
       <div class="flex-container" v-if="vini?.length > 0">
-        <a v-for="vino in vini" :key="vino.Id" class="card" :class="{ 'evidenziato': vino.Evidenzia }"
+        <a v-for="vino in vini" :key="vino.Id" class="card" :class="{ 'evidenziato': vino.Evidenzia == '1' || vino.Evidenzia == 1 }"
           @click="vaiDettaglio(vino.Id)" :href="`/vino?id=${vino.Id}`">
-          <div v-if="vino.Evidenzia" class="etichetta">In Evidenza</div>
+          <div v-if="vino.Evidenzia == '1' || vino.Evidenzia == 1" class="etichetta">In Evidenza</div>
           <img :src="`/img/vini/${vino.Id}.webp`" :alt="vino.Nome" />
           <div class="info">
-            <h3>{{ vino.Nome + ' ' + (vino?.Anno ? `(${vino.Anno})` : '') }}</h3>
+            <h3>{{ vino.Nome + (vino?.Anno && parseInt(vino.Anno) ? ` (${vino.Anno})` : '') }}</h3>
             <p>{{ vino.Marca }}</p>
             <span class="vitigno" v-if="vino.Vitigno">{{ vino.Vitigno }}</span>
             <strong v-if="vino.Offerta">
               <span class="prezzo-originale">{{ vino.Costo }} €</span>
               <span class="prezzo-offerta">{{ vino.Offerta }} €</span>
             </strong>
-            <strong v-else>{{ vino.Costo }} €</strong>
+            <strong v-else>{{ parseFloat(vino.Costo) ? `${vino.Costo} €` : "-- €" }}</strong>
           </div>
           <div class="quantita-bottiglia">{{ vino.Quantita }} L</div>
           <div class="colore-bottiglia" :class="vino.Colore">{{ vino.Colore }}</div>
-          <div class="bio-bottiglia" v-if="vino.Bio">Bio&nbsp;<img src="https://img.icons8.com/?size=15&id=15807&format=png&color=eeeeee"></div>
+          <div class="bio-bottiglia" v-if="vino.Bio == '1' || vino.Bio == 1">Bio&nbsp;<img
+              src="https://img.icons8.com/?size=15&id=15807&format=png&color=eeeeee"></div>
         </a>
       </div>
       <h1 v-else style="color: rgba(84, 84, 84, 1);">Nessun risultato <!-- {{ filtri.search != "" ? `per ' ${filtri.search}
         '` :
         filtri.Marca != "" ? `per ' ${filtri.Marca} '` : "" }} --></h1>
     </section>
+    <div v-if="(page * perPage) == vini?.length" class="loadMoreDiv">
+      <button @click="avantiPagina">
+        <v-icon class="icon" style="margin-right: 8px;">mdi-arrow-down</v-icon>
+        Carica altri
+      </button>
+    </div>
   </main>
   <myFooter v-if="!error" />
   <myError v-else :obj="errorObj" />
 </template>
 
 <style scoped>
+.loadMoreDiv,
+.loadMoreDiv button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadMoreDiv button {
+  font-size: 18px;
+  margin-top: 2vh;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #a1864f;
+  width: 50px;
+  box-sizing: border-box;
+  color: white;
+  transition: background 0.3s;
+  padding: 18px 30px;
+  min-width: fit-content;
+}
+
 .colore-bottiglia.Rosso {
   background-color: #7B0F15;
   color: #eeeeee;
@@ -378,7 +427,8 @@ hr {
 }
 
 .quantita-bottiglia,
-.colore-bottiglia, .bio-bottiglia {
+.colore-bottiglia,
+.bio-bottiglia {
   position: absolute;
   bottom: 10px;
   font-weight: bold;
@@ -391,7 +441,7 @@ hr {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-.bio-bottiglia{
+.bio-bottiglia {
   background-color: #88b04b;
   color: #eeeeee;
   top: 43px;
@@ -399,9 +449,10 @@ hr {
   justify-content: center;
   align-items: center;
   bottom: unset;
-  
+
 }
-.bio-bottiglia > img{
+
+.bio-bottiglia>img {
   min-height: unset !important;
   height: 15px !important;
   width: 15px;
@@ -469,7 +520,7 @@ hr {
   color: #18181B;
 }
 
-span.vitigno{
+span.vitigno {
   font-size: 15px;
   color: #A1A1AA;
 }
@@ -556,6 +607,7 @@ h2 {
 @media (max-width: 768px) {
   main {
     padding: 0;
+    padding-bottom: 4vh;
     align-items: center;
   }
 
@@ -568,6 +620,7 @@ h2 {
   section:not(:first-child) {
     padding: 2vh 4vw;
     margin: 0;
+    padding-bottom: 0;
   }
 
   .filtri-wrapper {
@@ -599,6 +652,16 @@ h2 {
   .filtri-container {
     padding: 2vh 2vw;
   }
+
+  .loadMoreDiv{
+    width: 100%;
+  }
+  .loadMoreDiv button {
+    font-size: 15px;
+    margin-top: 0;
+    width: 50px;
+    padding: 18px 30px;
+  }
 }
 
 @media screen and (max-width:480px) {
@@ -609,10 +672,11 @@ h2 {
     font-size: 12px;
   }
 
-  a.card{
+  a.card {
     height: 480px;
   }
-  .info p{
+
+  .info p {
     font-size: 16px;
   }
 
