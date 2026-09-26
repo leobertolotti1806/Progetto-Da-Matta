@@ -3,7 +3,6 @@
  * Cifra un array di dati in un token sicuro e compatto.
  *
  * @param array $data Dati da includere nel token (es. email, timestamp).
- * @param string $key Chiave segreta usata per la cifratura AES-256-CBC.
  *
  * @return string Token cifrato in formato base64, contenente IV + dati cifrati.
  */
@@ -18,7 +17,6 @@ function encryptToken($data)
  * Decifra un token cifrato precedentemente da encryptToken().
  *
  * @param string $token Token cifrato (in formato base64) ricevuto via email o altro canale.
- * @param string $key Chiave segreta usata per la decifratura (deve essere la stessa usata in encryptToken).
  *
  * @return array|null Restituisce l’array associativo dei dati originali se valido, oppure null se errore.
  */
@@ -48,13 +46,11 @@ function setToken($name, $data, $expire = false)
     setcookie(
         $name,
         json_encode(encryptToken($data)),
-        [
-            "expires" => $time + ((is_bool($expire) && !$expire) ? 1209600 : $expire),
-            "path" => "/",
-            "httponly" => true,
-            "secure" => isset($_SERVER['HTTPS']),
-            "samesite" => 'Lax'
-        ]
+        $time + ((is_bool($expire) && !$expire) ? 1209600 : 20000000),
+        "/",
+        "",
+        isset($_SERVER["HTTPS"]),
+        true
     );
 }
 
@@ -70,15 +66,12 @@ function deleteToken($name)
         setcookie(
             $name,
             '',
-            [
-                "expires" => time() - 3600, //1 ora fa,
-                "path" => "/",
-                "httponly" => true,
-                "secure" => isset($_SERVER['HTTPS']),
-                "samesite" => 'Lax'
-            ]
+            time() - 3600, // 1 ora fa
+            '/',
+            '',
+            isset($_SERVER['HTTPS']),
+            true
         );
-
 
         // Rimuove anche dalla superglobale per evitare accessi successivi nello stesso script
         unset($_COOKIE[$name]);

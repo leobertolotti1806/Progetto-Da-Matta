@@ -97,8 +97,24 @@ class File
     {
         $tempPath = $file["tmp_name"];
         $originalType = mime_content_type($tempPath);
+
+
+
+        /* #QUESTA RIGA FUNZIONA 100% SU ALTERVISTA
+        #QUESTA RIGA FUNZIONA 100% SU ALTERVISTA
+        #QUESTA RIGA FUNZIONA 100% SU ALTERVISTA
+        #QUESTA RIGA FUNZIONA 100% SU ALTERVISTA
+        $rootPath = dirname(__DIR__, 2); 
+        $destination = $rootPath . "/img/$folder/$fileName.webp"; */
+
+
+        #SU DAMATTA.CT.WS QUESTA RIGA E' LA VERSIONE CORRETTA FUNZIONA 100%
+        #SU DAMATTA.CT.WS QUESTA RIGA E' LA VERSIONE CORRETTA FUNZIONA 100%
+        #SU DAMATTA.CT.WS QUESTA RIGA E' LA VERSIONE CORRETTA FUNZIONA 100%
+        #SU DAMATTA.CT.WS QUESTA RIGA E' LA VERSIONE CORRETTA FUNZIONA 100%
         $destination = rtrim($_SERVER["DOCUMENT_ROOT"], '/') . "/img/$folder/$fileName.webp";
-        // Prova con GD (per i formati più comuni)
+
+
 
         if ($originalType === "image/webp") {
             return move_uploaded_file($tempPath, $destination);
@@ -158,6 +174,18 @@ class File
 
     public static function elimina($folder, $fileName): bool
     {
+        /* #QUESTA RIGA FUNZIONA 100% SU ALTERVISTA
+        #QUESTA RIGA FUNZIONA 100% SU ALTERVISTA
+        #QUESTA RIGA FUNZIONA 100% SU ALTERVISTA
+        #QUESTA RIGA FUNZIONA 100% SU ALTERVISTA
+        $rootPath = dirname(__DIR__, 2);
+        $path = $rootPath . "/img/$folder/$fileName.webp"; */
+
+        
+        #SU DAMATTA.CT.WS QUESTA RIGA E' LA VERSIONE CORRETTA FUNZIONA 100%
+        #SU DAMATTA.CT.WS QUESTA RIGA E' LA VERSIONE CORRETTA FUNZIONA 100%
+        #SU DAMATTA.CT.WS QUESTA RIGA E' LA VERSIONE CORRETTA FUNZIONA 100%
+        #SU DAMATTA.CT.WS QUESTA RIGA E' LA VERSIONE CORRETTA FUNZIONA 100%
         $path = rtrim($_SERVER["DOCUMENT_ROOT"], '/') . "/img/$folder/$fileName.webp";
         return file_exists($path) ? unlink($path) : false;
     }

@@ -7,28 +7,53 @@ class ConnessioneDb
    {
       #La connessione è già stata inizializzata?
       if (self::$conn === null) {
+
+         /* #XAMPP - LOCALHOST:80 (LOCALE)
+         $host = "localhost";
+         $dbname = "vineria"; */
+
+         /* #DAMATTA.GT.TC
+         $host = "sql100.infinityfree.com";
+         $dbname = "if0_40185200_vineria"; */
+
+
+         /* #DAMATTA.IFREE.PAGE
+         $host = "sql100.infinityfree.com";
+         $dbname = "if0_40185200_vineria"; */
+
+
+         #damatta.ct.ws
          $host = "sql100.infinityfree.com";
          $dbname = "if0_40185200_vineria";
 
+         
+
          try {
-            self::$conn = new PDO(
-               "mysql:host=$host;dbname=$dbname",
-               "if0_40185200",
-               "XvhYE75i2j0hYr"
-            );
+            /* #XAMPP - localhost:80 (LOCALE)
+            self::$conn = new PDO("mysql:host=$host;dbname=$dbname","root",""); */
+
+            /* #DAMATTA.GT.TC
+            self::$conn = new PDO("mysql:host=$host;dbname=$dbname","if0_40185200","XvhYE75i2j0hYr"); */
+
+            /* #DAMATTA.IFREE.PAGE
+            self::$conn = new PDO("mysql:host=$host;dbname=$dbname","if0_40185200","XvhYE75i2j0hYr"); */
+
+
+            #DAMATTA.CT.WS
+            self::$conn = new PDO("mysql:host=$host;dbname=$dbname", "if0_39460279", "XvhYE75i2j0hYr");
 
             self::$conn->exec("SET NAMES utf8mb4");
             self::$conn->exec("SET CHARACTER SET utf8mb4");
 
             /* $host = "sql104.infinityfree.com";
-         $dbname = "if0_39460279_vineria";
+            $dbname = "if0_39460279_vineria";
 
-         try {
-            self::$conn = new PDO(
-               "mysql:host=$host;dbname=$dbname",
-               "if0_39460279",
-               "leomix06"
-            ); */
+            try {
+               self::$conn = new PDO(
+                  "mysql:host=$host;dbname=$dbname",
+                  "if0_39460279",
+                  "leomix06"
+               ); */
 
             self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 

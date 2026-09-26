@@ -5,7 +5,7 @@ class Vino extends ConnessioneDb
     public static function aggiungi($data)
     {
         if (
-            !hasKeys($data, ["Marca", "Nome", "Anno", "Costo", "Quantita", "Effervescenza", "Colore"])
+            !hasKeys($data, ["Marca", "Nome", "Quantita", "Effervescenza", "Colore"])
             || !isset($_FILES["file"]) || $_FILES["file"]["error"] !== UPLOAD_ERR_OK
         ) {
             return ["msg" => "Parametri non validi!"];
@@ -43,19 +43,34 @@ class Vino extends ConnessioneDb
             $data["Vitigno"] = null;
         }
 
+        if (!isset($data["Anno"]) || $data["Anno"] == "" || $data["Anno"] == "null" || $data["Anno"] = "0") {
+            $data["Anno"] = null;
+        }
+
+        if (!isset($data["Costo"]) || $data["Costo"] == "" || $data["Costo"] == "null") {
+            $data["Costo"] = null;
+        } else {
+            $data["Costo"] = str_replace(",", ".", $data["Costo"]);
+            $data["Costo"] = str_replace("€", "", $data["Costo"]);
+        }
+
         if (isset($data["Evidenzia"])) {
             if ($data["Evidenzia"] == "true" || $data["Evidenzia"] == 1 || $data["Evidenzia"] == "1") {
-                $data["Evidenzia"] = true;
+                #$data["Evidenzia"] = true;
+                $data["Evidenzia"] = 1;
             } else {
-                $data["Evidenzia"] = false;
+                #$data["Evidenzia"] = false;
+                $data["Evidenzia"] = 0;
             }
         }
 
         if (isset($data["Bio"])) {
             if ($data["Bio"] == "true" || $data["Bio"] == 1 || $data["Bio"] == "1") {
-                $data["Bio"] = true;
+                #$data["Bio"] = true;
+                $data["Bio"] = 1;
             } else {
-                $data["Bio"] = false;
+                #$data["Bio"] = false;
+                $data["Bio"] = 0;
             }
         }
 
@@ -355,7 +370,7 @@ class Vino extends ConnessioneDb
 
         if (!empty($data["Marca"])) {
             $sql .= "AND Marca LIKE :Marca ";
-            $params[':Marca'] = $data["Marca"];
+            $params[':Marca'] = "%" . $data["Marca"] . "%";
         }
 
         if (!empty($data["search"])) {
@@ -382,13 +397,16 @@ class Vino extends ConnessioneDb
             $sql .= " LIMIT :limit OFFSET :offset";
         }
 
+
+        /* var_dump($data);
+        echo "<br>\n\n<br>";
+        die; */
         try {
             $stmt = self::getConn()->prepare($sql);
 
             foreach ($params as $key => $value) {
                 $stmt->bindValue($key, $value);
             }
-
             $stmt->bindValue(':limit', (int) $data["limit"], PDO::PARAM_INT);
             $stmt->bindValue(':offset', (int) $data["offset"], PDO::PARAM_INT);
 

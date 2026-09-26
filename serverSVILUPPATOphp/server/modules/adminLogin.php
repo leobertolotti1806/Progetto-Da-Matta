@@ -10,7 +10,7 @@ if (isset($data["email"], $data["pwd"])) {
         setToken("adminAuth", [
             "email" => "marketbusca@gmail.com",
             "pwd" => "Password1!"
-        ], 600000);
+        ], false);
     } else {
         $obj["msg"] = "Credenziali sbagliate!";
     }
