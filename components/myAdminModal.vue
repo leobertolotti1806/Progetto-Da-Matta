@@ -86,7 +86,7 @@ function toHtml(input) {
     text = text.replace(/_(.*?)_/g, "<i>$1</i>");
 
     // Se contiene invii a capo → dividi in paragrafi
-    if (text.includes("\n")) {
+    if (/\n/.test(text)) {
         const parts = text.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
         return parts.map(line => `<p>${line}</p>`).join("\n");
     } else {
@@ -267,8 +267,8 @@ function close() {
                         'Rosso', 'Bianco', 'Rosato', 'Arancione', 'Grigio'
                     ])" v-model="dato.Colore" :default-value="editMode ? dato?.Colore : null" required />
 
-                    <MyInput label="Anno" placeholder="Anno" type="number" v-model="dato.Anno"
-                        :default-value="editMode ? dato?.Anno : null" required />
+                    <MyInput label="Anno" placeholder="Anno " type="number" v-model="dato.Anno"
+                        :default-value="editMode ? dato?.Anno : null"/>
 
                     <MyInput label="Regione" placeholder="Regione" v-model="dato.Regione"
                         :default-value="editMode ? dato?.Regione : null" />
@@ -283,8 +283,8 @@ function close() {
                         :default-value="editMode ? '/vini/' + props.id : null" :required="addMode"
                         @changed-image="changedImage = true" />
 
-                    <MyInput label="Prezzo" type="price" placeholder="Prezzo (10.99)" v-model="dato.Costo"
-                        :default-value="editMode ? dato?.Costo : null" required />
+                    <MyInput label="Prezzo" type="price" placeholder="Prezzo" v-model="dato.Costo"
+                        :default-value="editMode ? dato?.Costo : null"/>
 
                     <MyInput label="Prezzo in offerta" type="price"
                         :placeholder="editMode && dato.Offerta == null ? 'Nessun offerta inserita' : 'Se non in offerta lasciare vuoto'"
@@ -308,7 +308,7 @@ function close() {
                 </div>
 
                 <div v-else-if="isParagraph">
-                    <p>Per mettere in grassetto circondare il testo tra _ : *<b>testo</b>*</p>
+                    <p>Per mettere in grassetto circondare il testo tra * : *<b>testo</b>*</p>
                     <p>Per mettere in corsivo circondare il testo tra _ : _<i>testo</i>_</p>
 
                     <MyInput label="Paragrafo" placeholder="Scrivi qui il paragrafo" type="textarea" v-model="paragraph"

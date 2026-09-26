@@ -190,7 +190,7 @@ function handleDrop(e) {
         <!-- Prezzo con due decimali -->
         <input v-else-if="type === 'price'" type="number" step="0.01" inputmode="decimal"
             :placeholder="placeholder || '0.00'" :required="required" :value="modelValue ?? defaultValue"
-            @input="e => emit('update:modelValue', String(e.target.value).replace(',', '.'))" />
+            @input="e => emit('update:modelValue', String(e.target.value).replace(',', '.'))" min="0"/>
 
         <!-- Checkbox -->
         <div v-else-if="type === 'checkbox'" class="checkbox-wrapper">

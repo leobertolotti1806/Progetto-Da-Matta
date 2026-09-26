@@ -3,12 +3,41 @@ const mobileMenuOpen = ref(false);
 const dropdownOpen = ref(false);
 const headerHidden = ref(false);
 const mobileDropDown = ref(false);
+
+// Traccia quale colore (Tutti/Bianchi/Rossi) sta mostrando il sotto-menu
+// effervescenza, sia su desktop (hover) che su mobile (click)
+const activeColorDesktop = ref(null);
+const activeColorMobile = ref(null);
+
 const canShowTabs = reactive({
   "/home": true,
   "/vini": true,
   "/eventi": true,
   "/about": true,
 })
+
+// Primo livello: solo colori (Fermi/Mossi/Frizzanti sono stati tolti da qui)
+const colori = [
+  { key: 'tutti', label: 'Tutti', value: null },
+  { key: 'bianco', label: 'Bianchi', value: 'Bianco' },
+  { key: 'rosso', label: 'Rossi', value: 'Rosso' },
+];
+
+// Secondo livello: effervescenza, mostrato di lato quando si passa sopra un colore
+const effervescenze = [
+  { label: 'Fermi', value: 'Fermo' },
+  { label: 'Mossi', value: 'Mosso' },
+  { label: 'Frizzanti', value: 'Frizzante' },
+];
+
+// Costruisce l'href finale mettendo insieme colore (c) ed effervescenza (e)
+function buildHref(colore, eff) {
+  const params = new URLSearchParams();
+  if (colore) params.set('c', colore);
+  if (eff) params.set('e', eff);
+  const qs = params.toString();
+  return `/vini${qs ? '?' + qs : ''}`;
+}
 
 const route = useRoute();
 
@@ -49,6 +78,15 @@ const handleClickOutside = (e) => {
   }
 }
 
+// Quando il menu "Vini" si chiude, resetta anche l'eventuale sotto-menu aperto
+watch(dropdownOpen, (val) => {
+  if (!val) activeColorDesktop.value = null;
+});
+
+watch(mobileDropDown, (val) => {
+  if (!val) activeColorMobile.value = null;
+});
+
 onMounted(() => {
   headerHeight = headerRef.value?.offsetHeight || 80
   window.addEventListener('scroll', handleScroll)
@@ -64,21 +102,35 @@ onBeforeUnmount(() => {
   <header :class="{ 'header-hidden': headerHidden }" ref="headerRef">
     <div class="header-top">
       <a href="/home" class="logo">
-        <img src="http://damatta.ct.ws/img/loghi/loghi1.webp" />
+        <img src="http://damatta.ct.ws/img/loghi/loghi1.webp" v-on:error="this.onerror=null; this.src=`http://damatta.ct.ws/img/loghi/loghi1.webp`;"/>
       </a>
 
       <!-- Menu Desktop -->
       <nav class="nav">
         <div class="nav-item" v-if="canShowTabs['/vini']">
-          <span class="nav-link" ref="viniSpanRef" v-on:mouseover="dropdownOpen = true">Vini</span>
+          <a href="/vini" class="nav-link" ref="viniSpanRef" v-on:mouseover="dropdownOpen = true">Vini</a>
           <transition name="fade">
             <div class="desktop-categorie" v-if="dropdownOpen" ref="dropDownRef">
-              <a href="/vini">Tutti</a>
-              <a href="/vini?c=Bianco">Bianchi</a>
-              <a href="/vini?c=Rosso">Rossi</a>
-              <a href="/vini?e=Fermo">Fermi</a>
-              <a href="/vini?e=Mosso">Mossi</a>
-              <a href="/vini?e=Frizzante">Frizzanti</a>
+              <div
+                class="categoria-item"
+                v-for="colore in colori"
+                :key="colore.key"
+                @mouseover="activeColorDesktop = colore.key"
+              >
+                <a :href="buildHref(colore.value, null)">{{ colore.label }}</a>
+                <transition name="fade">
+                  <div
+                    class="desktop-categorie desktop-categorie--side"
+                    v-if="activeColorDesktop === colore.key"
+                  >
+                    <a
+                      v-for="eff in effervescenze"
+                      :key="eff.value"
+                      :href="buildHref(colore.value, eff.value)"
+                    >{{ eff.label }}</a>
+                  </div>
+                </transition>
+              </div>
             </div>
           </transition>
         </div>
@@ -99,15 +151,30 @@ onBeforeUnmount(() => {
     <div class="mobile-menu" v-if="mobileMenuOpen">
       <a class="nav-link" href="/home" v-if="canShowTabs['/home']">Home</a>
       <div class="mobile-vini" v-if="canShowTabs['/vini']">
-        <span class="nav-link" @click="mobileDropDown = !mobileDropDown">I Vini</span>
+        <div class="mobile-vini-row">
+          <a class="nav-link" href="/vini">I Vini</a>
+          <span class="mobile-toggle" @click="mobileDropDown = !mobileDropDown">{{ mobileDropDown ? '▾' : '▸' }}</span>
+        </div>
         <transition name="fade">
           <div v-if="mobileDropDown" class="mobile-categorie">
-            <a href="/vini">Tutti</a>
-            <a href="/vini?c=Bianco">Bianchi</a>
-            <a href="/vini?c=Rosso">Rossi</a>
-            <a href="/vini?e=Fermo">Fermi</a>
-            <a href="/vini?e=Mosso">Mossi</a>
-            <a href="/vini?e=Frizzante">Frizzanti</a>
+            <div class="categoria-item-mobile" v-for="colore in colori" :key="colore.key">
+              <div class="mobile-vini-row">
+                <a :href="buildHref(colore.value, null)">{{ colore.label }}</a>
+                <span
+                  class="mobile-toggle"
+                  @click="activeColorMobile = activeColorMobile === colore.key ? null : colore.key"
+                >{{ activeColorMobile === colore.key ? '▾' : '▸' }}</span>
+              </div>
+              <transition name="fade">
+                <div v-if="activeColorMobile === colore.key" class="mobile-categorie">
+                  <a
+                    v-for="eff in effervescenze"
+                    :key="eff.value"
+                    :href="buildHref(colore.value, eff.value)"
+                  >{{ eff.label }}</a>
+                </div>
+              </transition>
+            </div>
           </div>
         </transition>
       </div>
@@ -122,17 +189,17 @@ header {
   position: fixed;
   top: 0;
   width: 100vw;
-  background: #fff;
+  background: #f1dab1;
   z-index: 10;
   transition: transform 0.3s ease;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(47, 72, 88, 0.4);
 }
 
 .header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 0.8rem 2rem;
 }
 
 .logo {
@@ -141,7 +208,7 @@ header {
 }
 
 .logo img {
-  max-height: 50px;
+  max-height: 60px;
 }
 
 .nav {
@@ -324,5 +391,47 @@ header {
   .desktop-categorie {
     display: none;
   }
+}
+
+/* --- Aggiunte per il sotto-menu Mossi/Fermi/Frizzanti --- */
+
+.categoria-item {
+  position: relative;
+}
+
+.categoria-item > a {
+  display: block;
+}
+
+/* Il sotto-menu riusa esattamente le stesse regole di .desktop-categorie,
+   qui sovrascriviamo solo la posizione per farlo comparire a lato */
+.desktop-categorie--side {
+  top: -1rem;
+  left: auto;
+  right: 105%;
+  margin-right: 0.5rem;
+}
+
+/* Riga con etichetta cliccabile (link) + freccia di apertura sotto-menu (mobile) */
+.mobile-vini-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mobile-vini-row a {
+  flex: 1;
+}
+
+.mobile-toggle {
+  cursor: pointer;
+  padding: 0 0.5rem;
+  color: #333;
+  user-select: none;
+}
+
+.categoria-item-mobile {
+  display: flex;
+  flex-direction: column;
 }
 </style>

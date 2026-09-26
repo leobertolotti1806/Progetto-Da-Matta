@@ -17,35 +17,63 @@ const search = ref("");
 const sortBy = ref("");
 const sortDir = ref("");
 const page = ref(1);
-const perPage = 20;
+const perPage = 45;
 const colonne = ref(null);
 const idToPass = ref(null);
 const idEventoSoloXIscrizioniModal = ref(null);
 const mode = ref(null);
 load();
 
-function load() {
+function load(justRefresh = false) {
+    console.log("page.value = " + page.value);
     document.body.classList.add("cursorWait");
-    postData(`/getAdmin${endpoint.value}`, {
+    let params = {
         search: search.value,
         sortBy: sortBy.value,
         sortDir: sortDir.value,
         limit: perPage,
         offset: (page.value - 1) * perPage
-    }).then(function (esito) {
+    };
+    if (justRefresh) {
+        params.limit = elementi.value.length;
+        params.offset = 0;
+        elementi.value = [];
+    }
+    postData(`/getAdmin${endpoint.value}`, params).then(function (esito) {
         if (!esito.ok) {
             alert(esito.msg);
         } else {
-            if (esito.data.length > 0) {
+            /* if (esito.data.length > 0) {
+                console.log("esito.data.length > 0 = " + (esito.data.length > 0));
+                console.log("PRIMA elementi.value = " + elementi.value);
+
                 if (page.value === 1) {
                     elementi.value = esito.data;
+                    console.log("DOPO elementi.value = " + elementi.value);
                 } else {
-                    elementi.value.push(...esito.data);
+                    for (let i = 0; i < esito.data.length; i++) {
+
+                        elementi.value.push(esito.data[i]);
+                    }
+
+                    console.log("DOPO elementi.value = " + elementi.value);
                 }
 
                 colonne.value = Object.keys(elementi.value[0]).filter(el => el !== "Id");
             } else {
                 elementi.value = [];
+            } */
+            if (page.value === 1) {
+                elementi.value = esito.data;
+            } else {
+                for (let i = 0; i < esito.data.length; i++) {
+
+                    elementi.value.push(esito.data[i]);
+                }
+            }
+
+            if (esito.data.length > 0) {
+                colonne.value = Object.keys(elementi.value[0]).filter(el => el !== "Id");
             }
         }
         document.body.classList.remove("cursorWait");
@@ -71,7 +99,7 @@ function cerca() {
 function avantiPagina() {
     if ((page.value * perPage) <= elementi.value.length) {
         page.value++;
-        load();
+        setTimeout(load, 40);
     }
 }
 
@@ -137,12 +165,14 @@ function renderizza(text, col) {
 
     if (col == "Costo") {
         if (titolo.value == "Vini") {
-            if (text.includes("-")) {
+            if (text?.includes("-")) {
                 const [prezzo, offerta] = text.split("-");
                 t = `<div class="offerta-vini">
                         <div>${prezzo}€</div>
                         <div>${offerta}€</div>
                      </div>`;
+            } else if (text == 0) {
+                t = "--";
             } else {
                 t = text + "€";
             }
@@ -154,7 +184,7 @@ function renderizza(text, col) {
     } else if (titolo.value == "Vini" && (
         col == "Evidenzia" || col == "Offerta" || col == "Bio"
     )) {
-        t = text ? "Sì✅" : "No❌";
+        t = text == "1" || text == 1 ? "Sì✅" : "No❌";
     } else if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
         t = toSlashDate(text);
     } else if (titolo.value == "Iscrizioni" && col == "Data") {
@@ -167,6 +197,8 @@ function renderizza(text, col) {
             minute: "2-digit",
             hour12: false
         });
+    } else if (titolo.value == "Vini" && col == "Anno" && text == 0) {
+        t = "--";
     } else {
         t = text;
     }
@@ -176,8 +208,8 @@ function renderizza(text, col) {
 
 </script>
 <template>
-    <myAdminModal v-if="showModal" @close="showModal = false" @reload="load()" :mode="mode" :id="idToPass" :name="name"
-        :idEvento="idEventoSoloXIscrizioniModal ?? null" />
+    <myAdminModal v-if="showModal" @close="showModal = false" @reload="load(true)" :mode="mode" :id="idToPass"
+        :name="name" :idEvento="idEventoSoloXIscrizioniModal ?? null" />
     <div class="wrapper">
         <div class="top-bar">
             <div>
