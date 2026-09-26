@@ -107,6 +107,7 @@ useHead({ title: "Home" });
 main {
   display: flex;
   flex-direction: column;
+  
   width: 100%;
   background: url("/img/paperBackground.png") repeat;
   background-color: #fdfdfd;
@@ -178,13 +179,11 @@ section .btn {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background-color: rgba(240, 248, 255, 0.2);
   padding: 3.5vw 7vw;
-  box-shadow: 0px 0px 15px 4px rgba(240, 248, 255, 0.3);
 }
 
 :deep(#section1>div>*) {
-  text-shadow: 0px 2px 10px rgba(0, 0, 0, 0.8);
+  text-shadow: 0px 2px 6px rgba(255, 255, 255, 0.8);
 }
 
 :deep(#section1 h1 p) {

@@ -187,7 +187,7 @@ useHead({ title: "Chi Siamo" });
 
 <style scoped>
 main {
-  margin-top: 90px;
+  margin-top: 94px;
   background: url("/img/lightBackground.png") repeat;
   background-color: #fdfdfd;
   display: flex;

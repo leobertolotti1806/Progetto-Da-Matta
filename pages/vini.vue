@@ -315,7 +315,7 @@ main {
   width: 100%;
   padding: 2vh 6vw;
   padding-bottom: 6vh;
-  margin-top: 90px;
+  margin-top: 94px;
   row-gap: 4vh;
   background: url("/img/lightBackground.png") repeat;
 }

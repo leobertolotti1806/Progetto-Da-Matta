@@ -97,7 +97,7 @@ if (!route.query.id) {
 main {
     display: flex;
     justify-content: center;
-    margin-top: 90px;
+    margin-top: 94px;
     padding: 4vh 6vw;
     background: url("/img/lightBackground.png") repeat;
 }

@@ -119,7 +119,7 @@ main {
     min-height: 100vh;
     padding: 4vh 6vw 10vh 6vw;
     row-gap: 10vh;
-    margin-top: 90px;
+    margin-top: 94px;
     background: url("/img/triangleBackground.png") repeat;
     background-size: auto;
 }

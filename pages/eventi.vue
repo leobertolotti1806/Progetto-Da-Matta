@@ -196,7 +196,7 @@ img.edit:hover,
 main {
   width: 100%;
   padding: 3.5vh 5vw;
-  margin-top: 90px;
+  margin-top: 94px;
   display: flex;
   align-items: center;
   justify-content: center;
