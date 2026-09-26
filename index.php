@@ -9,9 +9,10 @@ function isAdmin()
 
         if (
             $token != null && isset($token["email"], $token["pwd"]) &&
-            $token["email"] == "email@gmail.com" && $token["pwd"] == "Password1!"
+            $token["email"] == "marketbusca@gmail.com" && $token["pwd"] == "Password1!"
         ) {
-            $isAdmin = time() - $token["createdAt"] <= 600000;
+            #$isAdmin = time() - $token["createdAt"] <= 600000;
+            $isAdmin = true;
         } else {
             $obj["msg"] = "Token non valido!";
         }
@@ -80,19 +81,9 @@ if ($path != "" && file_exists($filePath) && str_ends_with($uriVero, ".html")) {
 
 }
 
-
 #NOTA, PUOI FARE ANCHE QUA DELLE HEADER SE NON HAI I DIRITTI PER FARE UNA DETERMINATA RICHIESTA
-#NOTA, PUOI FARE ANCHE QUA DELLE HEADER SE NON HAI I DIRITTI PER FARE UNA DETERMINATA RICHIESTA
-
 #QUI SOTTO DEVI METTERE TUTTE LE REDIRECT CHE FAI TRAMITE FETCH/FORM SENNO' NON FUNZIONA
-#QUI SOTTO DEVI METTERE TUTTE LE REDIRECT CHE FAI TRAMITE FETCH/FORM SENNO' NON FUNZIONA
-#QUI SOTTO DEVI METTERE TUTTE LE REDIRECT CHE FAI TRAMITE FETCH/FORM SENNO' NON FUNZIONA
-
 #qua vanno fatti i reindirizzamenti fatti tramite form
-#qua vanno fatti i reindirizzamenti fatti tramite form
-#qua vanno fatti i reindirizzamenti fatti tramite form
-#FAI CONTROLLI PERMESSI ANCHE QUI
-#FAI CONTROLLI PERMESSI ANCHE QUI
 #FAI CONTROLLI PERMESSI ANCHE QUI
 
 $route = explode("/", $uriVero);
@@ -129,7 +120,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
             if (isAdmin()) {
                 header("Location: /public/$path/index.html$getParams");
             } else {
-                header("Location: /403/index.html");
+                header("Location: /admin/index.html");
             }
             die;
 
@@ -153,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
             die;
 
         default:
-            if (!isAdmin()) {
+            if (isAdmin()) {
                 require_once "./server/modules/apiAdmin.php";
             } else {
                 jsonDenyMsg();
@@ -162,12 +153,11 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     }
 }
 
-
 #se non è ne una pagina o un file esistente e neanche una "risorsa api"
 header("Location: /404/index.html");
 die;
 
-function jsonDenyMsg($msg = "Non hai i diritti per accedere a questa funzionalità!")
+function jsonDenyMsg($msg = "Non hai i diritti per accedere a questa funzionalità! Effettua il login da amministratore")
 {
     header("Content-Type: application/json");
     die(json_encode(["msg" => $msg]));
